@@ -7,8 +7,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 public class NewBookV2 extends JFrame {
     private JTextField nameField;
@@ -77,7 +77,7 @@ public class NewBookV2 extends JFrame {
                     tempBook.setHappyYear(year);
                     tempBook.setPages(pages);
                     tempBook.setGenre(genreField.getText());
-                    Set<Author> tempAuths = new HashSet<>();
+                    List<Author> tempAuths = new ArrayList<>();
                     for (int i = 0; i < booksAuthorsListModel.getSize(); i++) {
                         tempAuths.add(booksAuthorsListModel.getElementAt(i));
                     }

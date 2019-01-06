@@ -3,6 +3,7 @@ package ru.mr.GLab2.client.view.version2;
 import ru.mr.GLab2.server.model.Author;
 import ru.mr.GLab2.server.model.Book;
 import ru.mr.GLab2.util.Net;
+import ru.mr.GLab2.util.wrapper.CommandWrapper;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -56,9 +57,10 @@ public class ClientModificator extends Thread {
 
         System.out.println("ClientModificator privet!");
         boolean workPr = true;
+        CommandWrapper commandWrapper = new CommandWrapper();
         while (workPr) {
             int b = net.receiveCommand();
-            System.out.println(net.decodeCommand(b));
+            System.out.println(commandWrapper.decodeCommand(b));
 
             switch (b) {
 
@@ -130,7 +132,6 @@ public class ClientModificator extends Thread {
                     if (id > -1) {
                         newAuthorV2.successCreateOrUpdateAuthor();
                         newAuthorV2 = null;
-                        // based.updateAuthorList();
                     } else {
                         newAuthorV2.unsuccessCreateOrUpdateAuthor();
                     }
@@ -165,7 +166,6 @@ public class ClientModificator extends Thread {
                     if (id > -1) {
                         newBookV2.successCreateOrUpdateBook();
                         newBookV2 = null;
-                        //  based.updateBookList();
                     } else {
                         newBookV2.unsuccessCreateOrUpdateBook();
                     }

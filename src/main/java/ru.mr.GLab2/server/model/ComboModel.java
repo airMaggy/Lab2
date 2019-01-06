@@ -1,25 +1,40 @@
 package ru.mr.GLab2.server.model;
 
-import java.io.*;
+import ru.mr.GLab2.util.Xml;
+
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
+import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+
+@XmlRootElement(name = "model")
+@XmlType(name = "model", propOrder = {"authors", "books"})
 public class ComboModel implements Serializable {
-    private static final String DIRECTORY = "Lab2_BD.out";
+    private static final String DIRECTORY = "BD.xml";
     private List<Author> authors;
     private List<Book> books;
 
-    public ComboModel() throws IOException, ClassNotFoundException {
+    public ComboModel() {
+        this.authors = new ArrayList<>();
+        this.books = new ArrayList<>();
+    }
+
+    public void loadData() {
         final File file = new File(DIRECTORY);
         if (file.exists()) {
-            FileInputStream fis = new FileInputStream(file);
-            ObjectInputStream oin = new ObjectInputStream(fis);
-            ComboModel CM = (ComboModel) oin.readObject();
+            ComboModel CM = Xml.loadModelFromFile(file);
             setAuthors(CM.getAuthors());
             setBooks(CM.getBooks());
-        } else {
-            this.authors = new ArrayList<>();
-            this.books = new ArrayList<>();
+            for (Book book : CM.getBooks()) {
+                for (Author author : book.getAuthors()) {
+                    CM.getAuthorById(author.getId()).getBooks().add(CM.getBookById(book.getId()));
+                }
+            }
         }
     }
 
@@ -27,6 +42,8 @@ public class ComboModel implements Serializable {
         return authors;
     }
 
+    @XmlElement(name = "author")
+    @XmlElementWrapper(required = true, nillable = true)
     public void setAuthors(List<Author> authors) {
         this.authors = authors;
     }
@@ -35,19 +52,18 @@ public class ComboModel implements Serializable {
         return books;
     }
 
+    @XmlElement(name = "book")
+    @XmlElementWrapper(required = true, nillable = true)
     public void setBooks(List<Book> books) {
         this.books = books;
     }
 
-    public void setSerilCM() throws IOException {
+    public void setSerilCM() {
         final File file = new File(DIRECTORY);
         if (file.exists()) {
             file.delete();
         }
-        ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file));
-        oos.writeObject(this);
-        oos.flush();
-        oos.close();
+        Xml.saveModelToFile(this, file);
     }
 
     //А теперь немного я покожу, хе-хе
@@ -57,15 +73,6 @@ public class ComboModel implements Serializable {
 
     public long getCountBooks() {
         return books.size();
-    }
-
-    //Хватит пожалуй)
-    public Book getBookByName(String name) {
-        return this.books.stream().filter(x -> x.getNameBook().equals(name)).findFirst().orElse(null);
-    }
-
-    public Author getAuthorByName(String name) {
-        return this.authors.stream().filter(x -> x.getNameAuthor().equals(name)).findFirst().orElse(null);
     }
 
     public Book getBookById(Long id) {

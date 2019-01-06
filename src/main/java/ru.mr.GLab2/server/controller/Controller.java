@@ -7,7 +7,6 @@ import ru.mr.GLab2.server.model.ComboModel;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Set;
 
 public class Controller {
     private ComboModel CM;
@@ -121,7 +120,7 @@ public class Controller {
         return 2019 - dateHappy < 150 && dateHappy > 0;
     }
 
-    private boolean checkDateBook(Set<Author> tmpAuth, Long dateBook) {//проверка на авторов книжки
+    private boolean checkDateBook(List<Author> tmpAuth, Long dateBook) {//проверка на авторов книжки
         return tmpAuth.stream().allMatch((x) -> x.getHappyYear() + 10 < dateBook);
     }
 

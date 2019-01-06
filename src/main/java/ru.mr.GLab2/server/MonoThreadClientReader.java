@@ -8,6 +8,7 @@ import ru.mr.GLab2.server.model.Author;
 import ru.mr.GLab2.server.model.Book;
 import ru.mr.GLab2.server.model.ComboModel;
 import ru.mr.GLab2.util.Net;
+import ru.mr.GLab2.util.wrapper.CommandWrapper;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,9 +39,10 @@ public class MonoThreadClientReader extends Thread {
             System.out.println("out & in est'");
             System.out.println("poneslasya");
             boolean workPr = true;
+            CommandWrapper commandWrapper = new CommandWrapper();
             while (workPr) {
                 int b = net.receiveCommand();
-                System.out.println(net.decodeCommand(b));
+                System.out.println(commandWrapper.decodeCommand(b));
                 switch (b) {
                     case (Net.NOTIFY | Net.UPDATE | Net.AUTHOR): {
                         synchronized (net) {

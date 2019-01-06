@@ -1,9 +1,12 @@
 package ru.mr.GLab2.server.model;
 
+import javax.xml.bind.annotation.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+@XmlRootElement(name = "author")
+@XmlType(name = "author", propOrder = {"nameAuthor", "alive", "happyYear", "sadYear", "happyPlace", "intFacts"})
 public class Author implements Serializable {
     private Long id;
     private String nameAuthor;
@@ -37,6 +40,7 @@ public class Author implements Serializable {
         return id;
     }
 
+    @XmlAttribute(required = true)
     public void setId(Long id) {
         this.id = id;
     }
@@ -45,6 +49,7 @@ public class Author implements Serializable {
         return nameAuthor;
     }
 
+    @XmlElement(required = true, name = "name")
     public void setNameAuthor(String nameAuthor) {
         this.nameAuthor = nameAuthor;
     }
@@ -53,6 +58,7 @@ public class Author implements Serializable {
         return happyYear;
     }
 
+    @XmlElement(required = true)
     public void setHappyYear(Long happyYear) {
         this.happyYear = happyYear;
     }
@@ -61,6 +67,7 @@ public class Author implements Serializable {
         return sadYear;
     }
 
+    @XmlElement(required = true)
     public void setSadYear(Long sadYear) {
         this.sadYear = sadYear;
     }
@@ -69,6 +76,7 @@ public class Author implements Serializable {
         return happyPlace;
     }
 
+    @XmlElement(required = true)
     public void setHappyPlace(String happyPlace) {
         this.happyPlace = happyPlace;
     }
@@ -77,6 +85,7 @@ public class Author implements Serializable {
         return intFacts;
     }
 
+    @XmlElement(required = true)
     public void setIntFacts(String intFacts) {
         this.intFacts = intFacts;
     }
@@ -85,6 +94,7 @@ public class Author implements Serializable {
         return alive;
     }
 
+    @XmlElement(required = true)
     public void setAlive(boolean alive) {
         this.alive = alive;
     }
@@ -93,6 +103,7 @@ public class Author implements Serializable {
         return books;
     }
 
+    @XmlTransient
     public void setBooks(List<Book> books) {
         this.books = books;
     }

@@ -1,13 +1,16 @@
 package ru.mr.GLab2.server.model;
 
+import javax.xml.bind.annotation.*;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
+@XmlRootElement(name = "book")
+@XmlType(name = "book", propOrder = {"nameBook", "happyYear", "genre", "pages", "authors"})
 public class Book implements Serializable {
     private Long id;
     private String nameBook;
-    private Set<Author> authors;
+    private List<Author> authors;
     private Long happyYear;
     private String genre;
     private Long pages;
@@ -21,7 +24,7 @@ public class Book implements Serializable {
 
     public Book(Long id, String nameBook, Long happyYear, String genre) {
         this.id = id;
-        this.authors = new HashSet<>();
+        this.authors = new ArrayList<>();
         this.nameBook = nameBook;
         this.happyYear = happyYear;
         this.genre = genre;
@@ -32,6 +35,7 @@ public class Book implements Serializable {
         return id;
     }
 
+    @XmlAttribute(required = true)
     public void setId(Long id) {
         this.id = id;
     }
@@ -40,6 +44,7 @@ public class Book implements Serializable {
         return nameBook;
     }
 
+    @XmlElement(required = true, name = "name")
     public void setNameBook(String nameBook) {
         this.nameBook = nameBook;
     }
@@ -48,15 +53,18 @@ public class Book implements Serializable {
         return happyYear;
     }
 
+    @XmlElement(required = true)
     public void setHappyYear(Long happyYear) {
         this.happyYear = happyYear;
     }
 
-    public Set<Author> getAuthors() {
+    public List<Author> getAuthors() {
         return authors;
     }
 
-    public void setAuthors(Set<Author> authors) {
+    @XmlElement(required = true, name = "author")
+    @XmlElementWrapper(required = true)
+    public void setAuthors(List<Author> authors) {
         this.authors = authors;
     }
 
@@ -64,6 +72,7 @@ public class Book implements Serializable {
         return genre;
     }
 
+    @XmlElement(required = true)
     public void setGenre(String genre) {
         this.genre = genre;
     }
@@ -72,6 +81,7 @@ public class Book implements Serializable {
         return pages;
     }
 
+    @XmlElement(required = true)
     public void setPages(Long pages) {
         this.pages = pages;
     }
