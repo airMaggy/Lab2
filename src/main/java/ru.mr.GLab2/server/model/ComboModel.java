@@ -1,13 +1,13 @@
 package ru.mr.GLab2.server.model;
 
 import java.io.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ComboModel implements Serializable {
-    private static final String DIRECTORY = "D:\\Гаврилов\\Lab2_BD.out";
-    private Set<Author> authors;
-    private Set<Book> books;
+    private static final String DIRECTORY = "Lab2_BD.out";
+    private List<Author> authors;
+    private List<Book> books;
 
     public ComboModel() throws IOException, ClassNotFoundException {
         final File file = new File(DIRECTORY);
@@ -18,24 +18,24 @@ public class ComboModel implements Serializable {
             setAuthors(CM.getAuthors());
             setBooks(CM.getBooks());
         } else {
-            this.authors = new HashSet<>();
-            this.books = new HashSet<>();
+            this.authors = new ArrayList<>();
+            this.books = new ArrayList<>();
         }
     }
 
-    public Set<Author> getAuthors() {
+    public List<Author> getAuthors() {
         return authors;
     }
 
-    public void setAuthors(Set<Author> authors) {
+    public void setAuthors(List<Author> authors) {
         this.authors = authors;
     }
 
-    public Set<Book> getBooks() {
+    public List<Book> getBooks() {
         return books;
     }
 
-    public void setBooks(Set<Book> books) {
+    public void setBooks(List<Book> books) {
         this.books = books;
     }
 
@@ -44,43 +44,64 @@ public class ComboModel implements Serializable {
         if (file.exists()) {
             file.delete();
         }
-        FileOutputStream fos = new FileOutputStream(file);
-        ObjectOutputStream oos = new ObjectOutputStream(fos);
+        ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file));
         oos.writeObject(this);
         oos.flush();
         oos.close();
     }
 
+    //А теперь немного я покожу, хе-хе
+    public long getCountAuthors() {
+        return authors.size();
+    }
+
+    public long getCountBooks() {
+        return books.size();
+    }
+
+    //Хватит пожалуй)
     public Book getBookByName(String name) {
-        return this.books.stream().filter((x) -> x.getNameBook().equals(name)).findFirst().orElse(null);
+        return this.books.stream().filter(x -> x.getNameBook().equals(name)).findFirst().orElse(null);
     }
 
     public Author getAuthorByName(String name) {
-        return this.authors.stream().filter((x) -> x.getNameAuthor().equals(name)).findFirst().orElse(null);
+        return this.authors.stream().filter(x -> x.getNameAuthor().equals(name)).findFirst().orElse(null);
     }
 
     public Book getBookById(Long id) {
-        return this.books.stream().filter((x) -> x.getId().equals(id)).findFirst().orElse(null);
+        return this.books.stream().filter(x -> x.getId().equals(id)).findFirst().orElse(null);
     }
 
     public Author getAuthorById(Long id) {
-        return this.authors.stream().filter((x) -> x.getId().equals(id)).findFirst().orElse(null);
+        return this.authors.stream().filter(x -> x.getId().equals(id)).findFirst().orElse(null);
     }
 
-    public void addBook(Book book) {
+    public Long addBook(Book book) {
         books.add(book);
+        return book.getId();
     }
 
-    public void addAuthor(Author author) {
+    public Long addAuthor(Author author) {
+
         authors.add(author);
+        return author.getId();
     }
 
     public void delBook(Book book) {
         books.remove(book);
     }
 
+    //дописал методы удаления по айдишнику, потому что могу
+    public void delBook(long id) {
+        books.remove(books.stream().filter((x) -> x.getId().equals(id)).findFirst().orElse(null));
+    }
+
     public void delAuthor(Author author) {
         authors.remove(author);
+    }
+
+    public void delAuthor(long id) {
+        authors.remove(authors.stream().filter((x) -> x.getId().equals(id)).findFirst().orElse(null));
     }
 
     public void setBook(Book book) {

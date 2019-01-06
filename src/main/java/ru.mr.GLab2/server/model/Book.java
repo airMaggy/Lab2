@@ -5,14 +5,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Book implements Serializable {
-    public static long ID = 0;
-
     private Long id;
     private String nameBook;
     private Set<Author> authors;
     private Long happyYear;
     private String genre;
     private Long pages;
+    //private boolean busy;
 
 
     //_____________________СДЕЛАТЬ НОРМ ГЕНЕРАЦИЮ ID
@@ -21,17 +20,12 @@ public class Book implements Serializable {
     }
 
     public Book(Long id, String nameBook, Long happyYear, String genre) {
-        this.id = ID;
-        ID++;
-        //this.id = id;
+        this.id = id;
         this.authors = new HashSet<>();
         this.nameBook = nameBook;
         this.happyYear = happyYear;
         this.genre = genre;
-    }
-
-    public static void nextID() {
-        ID++;
+        //this.busy = false;
     }
 
     public Long getId() {
@@ -93,4 +87,14 @@ public class Book implements Serializable {
     public String toString() {
         return id + ", " + nameBook + ", " + happyYear;
     }
+
+ /*   public boolean isBusy() {
+        return busy;
+    }
+
+    public void setBusy(boolean busy) {
+        this.busy = busy;
+    }
+
+    public String getBusy() {return busy?"y":"n";}*/
 }

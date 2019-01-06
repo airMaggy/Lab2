@@ -1,12 +1,10 @@
 package ru.mr.GLab2.server.model;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Author implements Serializable {
-    public static long ID = 0;
-
     private Long id;
     private String nameAuthor;
     private Long happyYear;
@@ -14,7 +12,8 @@ public class Author implements Serializable {
     private String happyPlace;
     private String intFacts;
     private boolean alive;
-    private Set<Book> books;
+    //private boolean busy;
+    private List<Book> books;
 
     public Author() {
         this(0L, "", 0L, 0L, "", "", false);
@@ -23,21 +22,15 @@ public class Author implements Serializable {
 
     //____________________СДЕЛАТЬ НОРМ ГЕНЕРАЦИЮ ID
     public Author(Long id, String nameAuthor, Long happyYear, Long sadYear, String happyPlace, String interestingFacts, boolean alive) {
-        this.id = ID;
-        ID++;
-        // /this.id = id;
+        this.id = id;
         this.nameAuthor = nameAuthor;
         this.happyYear = happyYear;
         this.sadYear = sadYear;
         this.happyPlace = happyPlace;
         this.intFacts = interestingFacts;
         this.alive = alive;
-
-        this.books = new HashSet<>();
-    }
-
-    public static void nextID() {
-        ID++;
+        //this.busy = false;
+        this.books = new ArrayList<>();
     }
 
     public Long getId() {
@@ -96,11 +89,11 @@ public class Author implements Serializable {
         this.alive = alive;
     }
 
-    public Set<Book> getBooks() {
+    public List<Book> getBooks() {
         return books;
     }
 
-    public void setBooks(Set<Book> books) {
+    public void setBooks(List<Book> books) {
         this.books = books;
     }
 
@@ -117,4 +110,13 @@ public class Author implements Serializable {
     public String toString() {
         return id + ", " + nameAuthor + ", " + happyYear;
     }
+
+ /*   public boolean isBusy() {
+        return busy;
+    }
+
+    public void setBusy(boolean busy) {
+        this.busy = busy;
+    }
+    public String getBusy() {return busy?"y":"n";}*/
 }
