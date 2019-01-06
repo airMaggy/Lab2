@@ -6,8 +6,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 @XmlRootElement(name = "author")
-@XmlType(name = "author", propOrder = {"nameAuthor", "alive", "happyYear", "sadYear", "happyPlace", "intFacts"})
+@XmlType(name = "author", propOrder = {"nameAuthor", "alive", "happyYear", "sadYear", "happyPlace", "intFacts", "books"})
 public class Author implements Serializable {
+    public static final String TABLE_NAME = "author";
+    public static final String ID_COLUMN = "id";
+    public static final String NAME_AUTHOR_COLUMN = "name_author";
+    public static final String HAPPY_YEAR_COLUMN = "happy_year";
+    public static final String SAD_YEAR_COLUMN = "sad_year";
+    public static final String HAPPY_PLACE_COLUMN = "happy_place";
+    public static final String INT_FACTS_COLUMN = "int_facts";
+    public static final String ALIVE_COLUMN = "alive";
+
     private Long id;
     private String nameAuthor;
     private Long happyYear;
@@ -103,7 +112,8 @@ public class Author implements Serializable {
         return books;
     }
 
-    @XmlTransient
+    @XmlElement(required = true, name = "book")
+    @XmlElementWrapper(required = true)
     public void setBooks(List<Book> books) {
         this.books = books;
     }

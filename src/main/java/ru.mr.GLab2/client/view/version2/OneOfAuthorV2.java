@@ -30,10 +30,7 @@ public class OneOfAuthorV2 extends JFrame {
     public OneOfAuthorV2(ClientWriter clientWr, ClientModificator clientMod, Long id) throws IOException {
         this.id = id;
         this.clientMod = clientMod;
-//        this.clientWr = clientWr;
         $$$setupUI$$$();
-
-        //clientWr.oneOfAuthorGetAuthor(id);
 
         booksListModel = new DefaultListModel<>();
         booksList.setModel(booksListModel);

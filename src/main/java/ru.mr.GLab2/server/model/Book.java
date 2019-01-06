@@ -8,6 +8,14 @@ import java.util.List;
 @XmlRootElement(name = "book")
 @XmlType(name = "book", propOrder = {"nameBook", "happyYear", "genre", "pages", "authors"})
 public class Book implements Serializable {
+    public static final String TABLE_NAME = "book";
+    public static final String ID_COLUMN = "id";
+    public static final String NAME_BOOK_COLUMN = "name_book";
+    public static final String HAPPY_YEAR_COLUMN = "happy_year";
+    public static final String GENRE_COLUMN = "genre";
+    public static final String PAGES_COLUMN = "pages";
+
+
     private Long id;
     private String nameBook;
     private List<Author> authors;

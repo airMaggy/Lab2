@@ -7,15 +7,18 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 public class Server {
     public static void main(String[] ar) {
-        ComboModel model = new ComboModel();
-        model.loadData();
-        Controller one = new Controller(model);
-
         int port = 6666;
         try {
+            Connection connection = DriverManager.getConnection("jdbc:h2:file:./db", "sa", "");
+            ComboModel model = new ComboModel(connection);
+            Controller one = new Controller(model);
+
             ServerSocket ss = new ServerSocket(port);
 
             while (true) {
@@ -28,7 +31,7 @@ public class Server {
             }
         } catch (SocketException e1) {
             System.out.println("Connection reset, tsss");
-        } catch (IOException e) {
+        } catch (IOException | SQLException e) {
             e.printStackTrace();
         }
     }

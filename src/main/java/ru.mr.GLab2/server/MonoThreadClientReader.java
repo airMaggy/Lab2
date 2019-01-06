@@ -159,6 +159,7 @@ public class MonoThreadClientReader extends Thread {
                             Author author = cm.getAuthorById(id);
                             net.sendCommand(Net.READ | Net.AUTHOR | Net.ONE);
                             net.sendObject(author);
+                            System.out.println("Books with author: " + author.getBooks().size());
                         }
                         break;
                     }

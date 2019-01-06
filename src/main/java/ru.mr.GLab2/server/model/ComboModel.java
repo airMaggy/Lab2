@@ -1,123 +1,87 @@
 package ru.mr.GLab2.server.model;
 
-import ru.mr.GLab2.util.Xml;
+import ru.mr.GLab2.util.dao.AuthorDao;
+import ru.mr.GLab2.util.dao.AuthorDaoImpl;
+import ru.mr.GLab2.util.dao.BookDao;
+import ru.mr.GLab2.util.dao.BookDaoImpl;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
-import java.io.File;
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.sql.Connection;
 import java.util.List;
 
 
-@XmlRootElement(name = "model")
-@XmlType(name = "model", propOrder = {"authors", "books"})
 public class ComboModel implements Serializable {
-    private static final String DIRECTORY = "BD.xml";
-    private List<Author> authors;
-    private List<Book> books;
+    private AuthorDao authorDao;
+    private BookDao bookDao;
 
-    public ComboModel() {
-        this.authors = new ArrayList<>();
-        this.books = new ArrayList<>();
-    }
-
-    public void loadData() {
-        final File file = new File(DIRECTORY);
-        if (file.exists()) {
-            ComboModel CM = Xml.loadModelFromFile(file);
-            setAuthors(CM.getAuthors());
-            setBooks(CM.getBooks());
-            for (Book book : CM.getBooks()) {
-                for (Author author : book.getAuthors()) {
-                    CM.getAuthorById(author.getId()).getBooks().add(CM.getBookById(book.getId()));
-                }
-            }
-        }
+    public ComboModel(Connection connection) {
+        authorDao = new AuthorDaoImpl(connection);
+        bookDao = new BookDaoImpl(connection);
     }
 
     public List<Author> getAuthors() {
-        return authors;
+        return authorDao.findAll();
     }
 
-    @XmlElement(name = "author")
-    @XmlElementWrapper(required = true, nillable = true)
     public void setAuthors(List<Author> authors) {
-        this.authors = authors;
+        authorDao.findAll().forEach(author -> authorDao.delete(author));
+        authors.forEach(author -> authorDao.insert(author));
     }
 
     public List<Book> getBooks() {
-        return books;
+        return bookDao.findAll();
     }
 
-    @XmlElement(name = "book")
-    @XmlElementWrapper(required = true, nillable = true)
     public void setBooks(List<Book> books) {
-        this.books = books;
+        bookDao.findAll().forEach(book -> bookDao.delete(book));
+        books.forEach(book -> bookDao.insert(book));
     }
 
-    public void setSerilCM() {
-        final File file = new File(DIRECTORY);
-        if (file.exists()) {
-            file.delete();
-        }
-        Xml.saveModelToFile(this, file);
-    }
-
-    //А теперь немного я покожу, хе-хе
     public long getCountAuthors() {
-        return authors.size();
+        return authorDao.count();
     }
 
     public long getCountBooks() {
-        return books.size();
+        return bookDao.count();
     }
 
     public Book getBookById(Long id) {
-        return this.books.stream().filter(x -> x.getId().equals(id)).findFirst().orElse(null);
+        return bookDao.findById(id);
     }
 
     public Author getAuthorById(Long id) {
-        return this.authors.stream().filter(x -> x.getId().equals(id)).findFirst().orElse(null);
+        return authorDao.findById(id);
     }
 
     public Long addBook(Book book) {
-        books.add(book);
-        return book.getId();
+        return bookDao.insert(book);
     }
 
     public Long addAuthor(Author author) {
-
-        authors.add(author);
-        return author.getId();
+        return authorDao.insert(author);
     }
 
     public void delBook(Book book) {
-        books.remove(book);
-    }
-
-    //дописал методы удаления по айдишнику, потому что могу
-    public void delBook(long id) {
-        books.remove(books.stream().filter((x) -> x.getId().equals(id)).findFirst().orElse(null));
+        bookDao.delete(book);
     }
 
     public void delAuthor(Author author) {
-        authors.remove(author);
-    }
-
-    public void delAuthor(long id) {
-        authors.remove(authors.stream().filter((x) -> x.getId().equals(id)).findFirst().orElse(null));
+        authorDao.delete(author);
     }
 
     public void setBook(Book book) {
-        delBook(this.books.stream().filter((x) -> x.getId().equals(book.getId())).findFirst().orElse(null));
-        addBook(book);
+        if (bookDao.findById(book.getId()).equals(new Book())) {
+            bookDao.insert(book);
+        } else {
+            bookDao.update(book);
+        }
     }
 
     public void setAuthor(Author author) {
-        delAuthor(this.authors.stream().filter((x) -> x.getNameAuthor().equals(author.getNameAuthor())).findFirst().orElse(null));
-        addAuthor(author);
+        if (authorDao.findById(author.getId()).equals(new Author())) {
+            authorDao.insert(author);
+        } else {
+            authorDao.update(author);
+        }
     }
 }

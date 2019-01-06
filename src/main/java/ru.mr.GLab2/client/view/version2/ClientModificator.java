@@ -123,6 +123,7 @@ public class ClientModificator extends Thread {
                 case (Net.READ | Net.AUTHOR | Net.ONE): {//ONE OF AUTHOR GET AUTHOR
                     Author author = (Author) net.receiveObject();
                     oneOfAuthorV2m.get(author.getId()).fillAuthorByModificator(author);
+                    System.out.println("Books with author: " + author.getBooks().size());
                     break;
                 }
 

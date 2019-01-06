@@ -28,7 +28,6 @@ public class Controller {
         if (book != null) {
             book.getAuthors().forEach(a -> a.getBooks().remove(book));
             CM.delBook(book);
-            CM.setSerilCM();
             observableController.notifyObserversAboutDeleteBook(id);
             return true;
         }
@@ -39,7 +38,6 @@ public class Controller {
         Author author = CM.getAuthorById(id);
         if (author != null && author.getBooks().isEmpty()) {
             CM.delAuthor(author);
-            CM.setSerilCM();
             observableController.notifyObserversAboutDeleteAuthor(id);
             return true;
         }
@@ -51,31 +49,20 @@ public class Controller {
     public long createAuthor(Author author) throws IOException {
 
         if (checkDateAuthor(author.getHappyYear(), author.getSadYear()) || (author.isAlive() && checkDateAliveAuthor(author.getHappyYear()))) {
-            Long ID = 0L;
-            while (CM.getAuthorById(ID) != null) {
-                ID++;
-            }
-            author.setId(ID);
-            CM.addAuthor(author);
-            CM.setSerilCM();
-            observableController.notifyObserversAboutCreateAuthor(author.getId());
-            return author.getId();
+            author.setId(0L);
+            Long id = CM.addAuthor(author);
+            observableController.notifyObserversAboutCreateAuthor(id);
+            return id;
         } else {
             return -1L;
         }
     }
     public long createBook(Book book) throws IOException {
         if (book != null && checkDateBook(book.getAuthors(), book.getHappyYear()) && book.getPages() > 0) {
-            Long ID = 0L;
-            while (CM.getBookById(ID) != null) {
-                ID++;
-            }
-            book.setId(ID);
-            book.getAuthors().forEach(a -> CM.getAuthorById(a.getId()).getBooks().add(book));
-            CM.addBook(book);
-            CM.setSerilCM();
-            observableController.notifyObserversAboutCreateBook(book.getId());
-            return book.getId();
+            book.setId(0L);
+            Long id = CM.addBook(book);
+            observableController.notifyObserversAboutCreateBook(id);
+            return id;
         }
         //насколько же проще передавать обьекты))
         return -1L;
@@ -90,7 +77,6 @@ public class Controller {
             long id = createAuthor(tmpA);
             CM.getAuthorById(id).setBooks(books);
             CM.getAuthorById(id).getBooks().forEach(b -> b.getAuthors().add(CM.getAuthorById(id)));
-            CM.setSerilCM();
             observableController.notifyObserversAboutChangeAuthor(id);
             return id;
         } else {
@@ -105,7 +91,6 @@ public class Controller {
 
             long id = createBook(book);
             book.getAuthors().forEach(a -> CM.getAuthorById(a.getId()).getBooks().add(book));
-            CM.setSerilCM();
             observableController.notifyObserversAboutChangeBook(id);
             return id;
         } else {
